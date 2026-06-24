@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Trekker Dashboard{% endblock %}
+{% block content %}
+<h3 class="mb-4">Available Treks</h3>
+
+{% if treks %}
+<table class="table table-striped">
+  <thead>
+    <tr><th>Name</th><th>Location</th><th>Difficulty</th><th>Slots</th></tr>
+  </thead>
+  <tbody>
+    {% for trek in treks %}
+    <tr>
+      <td>{{ trek.name }}</td>
+      <td>{{ trek.location }}</td>
+      <td>{{ trek.difficulty }}</td>
+      <td>{{ trek.available_slots }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="text-muted">No open treks right now.</p>
+{% endif %}
+
+<h3 class="mt-5 mb-4">My Bookings</h3>
+{% if bookings %}
+<table class="table table-striped">
+  <thead>
+    <tr><th>Trek</th><th>Booking Date</th><th>Status</th></tr>
+  </thead>
+  <tbody>
+    {% for booking in bookings %}
+    <tr>
+      <td>{{ booking.trek.name }}</td>
+      <td>{{ booking.booking_date.strftime('%d-%b-%Y') }}</td>
+      <td>{{ booking.status }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="text-muted">You haven't booked any treks yet.</p>
+{% endif %}
+
+<p class="text-muted mt-4">
+  Next: build search/filter, a booking action (check available_slots &gt; 0!), and profile editing.
+</p>
+{% endblock %}
