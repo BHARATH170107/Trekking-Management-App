@@ -75,7 +75,7 @@ def login():
         if user.role == "admin":
             return redirect(url_for("admin.dashboard"))
         elif user.role == "staff":
-            return redirect(url_for("staff.dashboard"))
+            return redirect(url_for("staff.dashboard"))             
         else:
             return redirect(url_for("trekker.dashboard"))
 
