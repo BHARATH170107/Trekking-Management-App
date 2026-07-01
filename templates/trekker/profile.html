@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}My Profile{% endblock %}
+{% block content %}
+<h3 class="mb-3">My Profile</h3>
+
+<form method="POST">
+  <div class="mb-3">
+    <label class="form-label">Full Name</label>
+    <input type="text" name="name" class="form-control"
+           value="{{ user.name }}" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Email</label>
+    <input type="email" class="form-control" value="{{ user.email }}" disabled>
+    <div class="form-text">Email cannot be changed.</div>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Contact Number</label>
+    <input type="text" name="contact" class="form-control"
+           value="{{ user.contact or '' }}">
+  </div>
+  <button type="submit" class="btn btn-success">Save Changes</button>
+</form>
+{% endblock %}
