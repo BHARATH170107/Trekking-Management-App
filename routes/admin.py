@@ -149,3 +149,71 @@ def assign_staff(trek_id):
         return redirect(url_for("admin.treks"))
 
     return render_template("admin/assign_staff.html", trek=trek, available_staff=available_staff)
+@admin_bp.route("/users")
+@login_required
+@role_required("admin")
+def users():
+    search = request.args.get("search", "").strip()
+    trekkers = User.query.filter_by(role="trekker")
+    if search:
+        trekkers = trekkers.filter(
+            User.name.ilike(f"%{search}%") | User.email.ilike(f"%{search}%")
+        )
+    trekkers = trekkers.all()
+    return render_template("admin/users.html", trekkers=trekkers, search=search)
+
+
+@admin_bp.route("/users/<int:user_id>/blacklist", methods=["POST"])
+@login_required
+@role_required("admin")
+def blacklist_user(user_id):
+    user = User.query.get_or_404(user_id)
+    user.status = "blacklisted"
+    db.session.commit()
+    flash(f"{user.name} has been blacklisted.", "info")
+    return redirect(url_for("admin.users"))
+
+
+@admin_bp.route("/users/<int:user_id>/unblacklist", methods=["POST"])
+@login_required
+@role_required("admin")
+def unblacklist_user(user_id):
+    user = User.query.get_or_404(user_id)
+    user.status = "active"
+    db.session.commit()
+    flash(f"{user.name} has been reinstated.", "success")
+    return redirect(url_for("admin.users"))
+
+
+@admin_bp.route("/bookings")
+@login_required
+@role_required("admin")
+def bookings():
+    all_bookings = Booking.query.all()
+    return render_template("admin/bookings.html", bookings=all_bookings)
+
+
+@admin_bp.route("/search")
+@login_required
+@role_required("admin")
+def search():
+    q = request.args.get("q", "").strip()
+    treks, staff_results, trekker_results = [], [], []
+
+    if q:
+        treks = Trek.query.filter(
+            Trek.name.ilike(f"%{q}%") | Trek.location.ilike(f"%{q}%")
+        ).all()
+        staff_results = User.query.filter(
+            User.role == "staff",
+            User.name.ilike(f"%{q}%") | User.email.ilike(f"%{q}%")
+        ).all()
+        trekker_results = User.query.filter(
+            User.role == "trekker",
+            User.name.ilike(f"%{q}%") | User.email.ilike(f"%{q}%")
+        ).all()
+
+    return render_template("admin/search.html", q=q,
+                           treks=treks,
+                           staff_results=staff_results,
+                           trekker_results=trekker_results)

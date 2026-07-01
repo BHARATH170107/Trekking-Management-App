@@ -41,14 +41,15 @@
 {% if stats.pending_staff > 0 %}
 <div class="alert alert-warning mt-4">
   {{ stats.pending_staff }} staff registration(s) awaiting approval.
-  <em>(Build the /admin/staff page to approve them.)</em>
 </div>
 {% endif %}
 
-<p class="text-muted mt-4">
-  <div class="mt-4">
-  <a href="{{ url_for('admin.treks') }}" class="btn btn-success me-2">Manage Treks</a>
+<div class="mt-4 d-flex gap-2 flex-wrap">
+  <a href="{{ url_for('admin.treks') }}" class="btn btn-success">Manage Treks</a>
   <a href="{{ url_for('admin.staff') }}" class="btn btn-success">Manage Staff</a>
+  <a href="{{ url_for('admin.users') }}" class="btn btn-success">Manage Users</a>
+  <a href="{{ url_for('admin.bookings') }}" class="btn btn-success">All Bookings</a>
+  <a href="{{ url_for('admin.search') }}" class="btn btn-outline-success">Search</a>
 </div>
-</p>
+
 {% endblock %}

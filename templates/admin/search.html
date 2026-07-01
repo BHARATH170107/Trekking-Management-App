@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Search{% endblock %}
+{% block content %}
+<h3 class="mb-3">Search</h3>
+
+<form method="GET" class="row g-2 mb-4">
+  <div class="col-md-5">
+    <input type="text" name="q" class="form-control"
+           placeholder="Search treks, staff, or trekkers..." value="{{ q }}">
+  </div>
+  <div class="col-auto">
+    <button type="submit" class="btn btn-success">Search</button>
+  </div>
+</form>
+
+{% if q %}
+  <h5>Treks ({{ treks|length }})</h5>
+  {% if treks %}
+  <table class="table table-sm table-striped mb-4">
+    <thead><tr><th>Name</th><th>Location</th><th>Status</th></tr></thead>
+    <tbody>
+      {% for trek in treks %}
+      <tr><td>{{ trek.name }}</td><td>{{ trek.location }}</td><td>{{ trek.status }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="text-muted">No treks found.</p>
+  {% endif %}
+
+  <h5>Staff ({{ staff_results|length }})</h5>
+  {% if staff_results %}
+  <table class="table table-sm table-striped mb-4">
+    <thead><tr><th>Name</th><th>Email</th><th>Status</th></tr></thead>
+    <tbody>
+      {% for s in staff_results %}
+      <tr><td>{{ s.name }}</td><td>{{ s.email }}</td><td>{{ s.status }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="text-muted">No staff found.</p>
+  {% endif %}
+
+  <h5>Trekkers ({{ trekker_results|length }})</h5>
+  {% if trekker_results %}
+  <table class="table table-sm table-striped mb-4">
+    <thead><tr><th>Name</th><th>Email</th><th>Status</th></tr></thead>
+    <tbody>
+      {% for t in trekker_results %}
+      <tr><td>{{ t.name }}</td><td>{{ t.email }}</td><td>{{ t.status }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="text-muted">No trekkers found.</p>
+  {% endif %}
+{% endif %}
+{% endblock %}
