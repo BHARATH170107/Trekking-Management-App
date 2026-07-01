@@ -105,3 +105,47 @@ def delete_trek(trek_id):
     db.session.commit()
     flash(f"Trek '{trek.name}' deleted.", "info")
     return redirect(url_for("admin.treks"))
+@admin_bp.route("/staff")
+@login_required
+@role_required("admin")
+def staff():
+    staff_list = User.query.filter_by(role="staff").all()
+    return render_template("admin/staff.html", staff_list=staff_list)
+
+
+@admin_bp.route("/staff/<int:user_id>/approve", methods=["POST"])
+@login_required
+@role_required("admin")
+def approve_staff(user_id):
+    staff_member = User.query.get_or_404(user_id)
+    staff_member.status = "active"
+    db.session.commit()
+    flash(f"{staff_member.name} approved.", "success")
+    return redirect(url_for("admin.staff"))
+
+
+@admin_bp.route("/staff/<int:user_id>/blacklist", methods=["POST"])
+@login_required
+@role_required("admin")
+def blacklist_staff(user_id):
+    staff_member = User.query.get_or_404(user_id)
+    staff_member.status = "blacklisted"
+    db.session.commit()
+    flash(f"{staff_member.name} blacklisted.", "info")
+    return redirect(url_for("admin.staff"))
+
+@admin_bp.route("/treks/<int:trek_id>/assign", methods=["GET", "POST"])
+@login_required
+@role_required("admin")
+def assign_staff(trek_id):
+    trek = Trek.query.get_or_404(trek_id)
+    available_staff = User.query.filter_by(role="staff", status="active").all()
+
+    if request.method == "POST":
+        staff_id = request.form.get("staff_id", type=int)
+        trek.assigned_staff_id = staff_id if staff_id else None
+        db.session.commit()
+        flash(f"Staff assignment updated for '{trek.name}'.", "success")
+        return redirect(url_for("admin.treks"))
+
+    return render_template("admin/assign_staff.html", trek=trek, available_staff=available_staff)

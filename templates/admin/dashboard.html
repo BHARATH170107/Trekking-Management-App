@@ -46,7 +46,9 @@
 {% endif %}
 
 <p class="text-muted mt-4">
-  Next: build pages for managing treks, approving staff, assigning staff to treks,
-  and viewing/searching users &amp; bookings.
+  <div class="mt-4">
+  <a href="{{ url_for('admin.treks') }}" class="btn btn-success me-2">Manage Treks</a>
+  <a href="{{ url_for('admin.staff') }}" class="btn btn-success">Manage Staff</a>
+</div>
 </p>
 {% endblock %}
